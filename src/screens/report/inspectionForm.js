@@ -8,6 +8,8 @@ import {
     TouchableHighlight, CameraRoll, Alert, Platform
 } from 'react-native';
 import RNImageTools from "react-native-image-tools";
+import Modal from 'react-native-modal';
+import MediaModal from '../component/mediaModal';
 import * as Progress from 'react-native-progress';
 import findIndex from 'lodash/findIndex';
 import Checkbox from '../component/checkbox/checkboxView';
@@ -86,8 +88,8 @@ class InspectionForm extends Component {
             imgArr: [],
             thumbnails: [],
             opened: false,
-            imageProgress:0,
-            videoProgress:0,
+            progress:0,
+            visibleModal: null,
             selectedItem: 'select one option'
         }
 
@@ -95,6 +97,26 @@ class InspectionForm extends Component {
 
     }
 
+    static onSendReport = () => {
+        that.setState({ visibleModal: 1 })
+    }
+
+    renderModalContent = () => (
+        <View style={style.modalContent}>
+                <View style={{alignItems:'center',justifyContent:'center'}}>
+                    <Text style={{marginBottom:10}}>Media uploading...!</Text>
+                </View>
+                <View style={{alignItems:'center',justifyContent:'center'}}>
+                    <MediaModal progress={this.state.progress} textSms={this.state.textSms} />
+
+                        <View style={{alignItems:'center'}}>
+                            <Text style={{fontSize:12,padding:5}}>
+
+                            </Text>
+                        </View>
+                </View>
+        </View>
+    );
 
     onPresSelect = ({ id, options }) => {
         if (!this.state.opened) {
@@ -170,6 +192,8 @@ class InspectionForm extends Component {
     };
 
     onImageSave = () => {
+        this.setState({visibleModal:1});
+
         let co = this.state.image.length;
         if(co != 0){
             let rand = Math.floor(1000000000000 + Math.random() * 9000000000000);
@@ -208,9 +232,9 @@ class InspectionForm extends Component {
                     console.log('response from aws s3 img:', response.body);
                 })
                 .progress((e) => {
-                    this.setState({imageProgress:e.loaded / e.total});
+                    this.setState({progress:e.loaded / e.total});
                     if(e.loaded / e.total === 1 ){
-                        this.setState({imageProgress:0});
+                        this.setState({progress:0, textSms:'please wait, just second '});
                     };
                     console.log(e.loaded / e.total);
                 });
@@ -233,7 +257,7 @@ class InspectionForm extends Component {
         console.log(imgData)
         this.props.addReportImages(imgData)
             .then((response) => {
-                alert(JSON.stringify(response.data.msg))
+                this.setState({visibleModal:null});
 
                 this.props.getReportImages(this.state.subsectionID, this.state.reportID)
                     .then((response) => {
@@ -279,6 +303,8 @@ class InspectionForm extends Component {
     }
 
     sentInAmazon = (imgID, url) => {
+        this.setState({visibleModal:1});
+
         let rand = Math.floor(1000000000000 + Math.random() * 9000000000000);
 
         const file = {
@@ -308,9 +334,9 @@ class InspectionForm extends Component {
                 console.log('response from aws s3 img:', response.body);
             })
             .progress((e) => {
-                this.setState({imageProgress:e.loaded / e.total});
+                this.setState({progress:e.loaded / e.total});
                 if(e.loaded / e.total === 1 ){
-                    this.setState({imageProgress:0});
+                    this.setState({progress:0});
                 };
                 console.log(e.loaded / e.total);
             });
@@ -323,7 +349,8 @@ class InspectionForm extends Component {
 
         this.props.updateReportImage(imgID, arr)
             .then((response) => {
-                alert(JSON.stringify(response.data.msg));
+                this.setState({visibleModal:null});
+
 
                 this.props.getReportImages(this.state.subsectionID, this.state.reportID)
                     .then((response) => {
@@ -386,6 +413,8 @@ class InspectionForm extends Component {
     };
 
     onVideoSave = () => {
+        this.setState({visibleModal:1});
+
         let co = this.state.video.length;
         if(co != 0){
             let rand = Math.floor(1000000000000 + Math.random() * 9000000000000);
@@ -424,9 +453,9 @@ class InspectionForm extends Component {
                     console.log('response from aws s3 video:', response.body);
                 })
                 .progress((e) => {
-                    this.setState({videoProgress:e.loaded / e.total});
+                    this.setState({progress:e.loaded / e.total});
                     if(e.loaded / e.total === 1 ){
-                        this.setState({videoProgress:0});
+                        this.setState({progress:0, textSms:'please wait, just second '});
                     };
                     console.log(e.loaded / e.total);
                 });
@@ -447,7 +476,7 @@ class InspectionForm extends Component {
 
         this.props.addReportVideo(imgData)
             .then((response) => {
-                alert(JSON.stringify(response.data.msg))
+                this.setState({visibleModal:null});
 
                 this.props.getReportVideo(this.state.subsectionID, this.state.reportID)
                     .then((response) => {
@@ -582,6 +611,14 @@ class InspectionForm extends Component {
                             showsVerticalScrollIndicator={false}
                             scrollEnabled={true}
                             ref="mainScroll">
+                    <Modal isVisible={this.state.visibleModal === 1}
+                           animationIn={'zoomIn'}
+                           animationOut={'zoomOut'}
+                           animationInTiming={500}
+                           animationOutTiming={500}
+                           backdropTransitionInTiming={5}
+                           backdropTransitionOutTiming={5}
+                           avoidKeyboard={true}>{this.renderModalContent()}</Modal>
                     <View style={{padding: 10}}>
                         {
                             this.state.elements.map((data, index) => {
@@ -640,10 +677,15 @@ class InspectionForm extends Component {
                         }
 
                     </View>
+
+
+                    <TextEditor style={{height:400,margin:4,borderRadius:5,borderColor:'gray',borderWidth:1}}/>
+
+
                     <View style={style.btnOuterView}>
                         <TouchableHighlight onPress={() => {this.onSave()}} style={{flex:1,width:'30%'}} underlayColor='transparent'>
                             <View style={style.btnView}>
-                                <Text style={{color:'white',fontSize:FontSize.regFont,fontWeight:'bold'}}>SAVE</Text>
+                                <Text style={{color:'white',fontSize:FontSize.regFont,fontWeight:'bold', alignItems:'center'}}>SAVE</Text>
                             </View>
                         </TouchableHighlight>
                     </View>
@@ -651,7 +693,6 @@ class InspectionForm extends Component {
                     <View style={style.separatorSaveView}>
                     </View>
 
-                    <TextEditor style={{height:400,margin:4,borderRadius:5,borderColor:'gray',borderWidth:1}}/>
 
                     <View style={style.btnOuterView}>
                         <TouchableHighlight onPress={() => {this.selectPhotoTapped()}} style={{flex:1,width:'100%'}} underlayColor='transparent'>
@@ -662,24 +703,8 @@ class InspectionForm extends Component {
                     </View>
 
 
-                    <View style={{alignItems:'center'}}>
-                        <Progress.Bar progress={this.state.imageProgress} width={Const.width-50}
-                                      height={this.state.imageProgress === 1 || this.state.imageProgress === 0 ? 0 : 6}
-                                      borderColor={this.state.imageProgress === 1 || this.state.imageProgress === 0 ? 'white' : 'rgba(0, 122, 255, 1)'}
-                        />
-                    </View>
-
-
                     <MultipleImageUpload onImageUpload={this.selectPhotoTapped} onImageDelete={(e) => this.selectPhotoDelete(e)}
                                          onImageEdit={(id, e, imgID, url) => this.selectPhotoEdit(id, e, imgID, url)} images={this.state.image} />
-
-                    <View style={style.btnOuterView}>
-                        <TouchableHighlight onPress={() => {}} style={{flex:1,width:'50%'}} underlayColor='transparent'>
-                            <View style={style.btnView}>
-                                <Text style={{color:'white',fontSize:FontSize.regFont,fontWeight:'bold'}}>Save All Images</Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
 
                     <View style={style.separatorView}>
                     </View>
@@ -693,24 +718,9 @@ class InspectionForm extends Component {
                     </View>
 
 
-                    <View style={{alignItems:'center'}}>
-                        <Progress.Bar progress={this.state.videoProgress} width={Const.width-50}
-                                      height={this.state.videoProgress === 1 || this.state.videoProgress === 0 ? 0 : 6}
-                                      borderColor={this.state.videoProgress === 1 || this.state.videoProgress === 0 ? 'white' : 'rgba(0, 122, 255, 1)'}
-                        />
-                    </View>
-
-
                     <MultipleVideoUpload onVideoUpload={this.selectVideoTapped} onVideoDelete={(e) => this.selectVideoDelete(e)}
                                          video={this.state.video} />
 
-                    <View style={style.btnOuterView}>
-                        <TouchableHighlight onPress={() => {}} style={{flex:1,width:'50%'}} underlayColor='transparent'>
-                            <View style={style.btnView}>
-                                <Text style={{color:'white',fontSize:FontSize.regFont,fontWeight:'bold'}}>Save All Videos</Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
 
                 </ScrollView>
                 }
@@ -770,7 +780,26 @@ const style = StyleSheet.create({
         height:1,
         backgroundColor:'red',
         opacity:0.2
-    }
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 22,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+    },
+    button: {
+        backgroundColor: Const.appblue,
+        padding: 12,
+        margin: 3,
+        height:35,
+        width:100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+    },
 });
 
 

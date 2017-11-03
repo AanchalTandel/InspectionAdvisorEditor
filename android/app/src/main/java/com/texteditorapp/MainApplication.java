@@ -3,6 +3,8 @@ package com.texteditorapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.brentvatne.react.ReactVideoPackage;
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.airbnb.android.react.maps.MapsPackage;
@@ -33,6 +35,8 @@ public class MainApplication extends Application implements ReactApplication, IA
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new VectorIconsPackage(),
+            new ReactVideoPackage(),
             new WebViewBridgePackage(),
             new SplashScreenReactPackage(),
             new MapsPackage(),

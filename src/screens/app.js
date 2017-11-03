@@ -15,7 +15,7 @@ export default class App extends React.Component {
         return (
             <Provider store={this.store} persistor={this.persisstore}>
                 <View style={{flex:1}} >
-                    <StatusBar hidden={false} backgroundColor="blue" barStyle="default"/>
+                    <StatusBar hidden={false} backgroundColor="transparent" barStyle="light-content"/>
                 <AppWithNavigationState />
                 </View>
             </Provider>

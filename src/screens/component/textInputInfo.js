@@ -48,7 +48,7 @@ export default class TextInputInfo extends Component{
                     <TextInput
                         ref = "2"
                         style={{borderRadius:25,fontSize:FontSize.regFont,paddingLeft:15,flex:1,
-                            justifyContent:'flex-end',backgroundColor: 'transparent'}}
+                            justifyContent:'flex-end',backgroundColor: 'transparent', margin:8}}
                         placeholder={this.state.placeHolder}
                         placeholderTextColor={Const.appblue}
                         underlineColorAndroid="transparent"

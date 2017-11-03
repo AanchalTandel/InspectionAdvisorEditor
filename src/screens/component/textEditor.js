@@ -3,10 +3,14 @@ import {
     StyleSheet,
     Text,
     View,
-    Platform
+    Platform,
+    TouchableHighlight,
+    Image
 } from 'react-native';
 import {RichTextEditor, RichTextToolbar} from 'react-native-zss-rich-text-editor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import Const from '../../helper/constant';
+import FontSize from '../../helper/fontsize';
 
 export default class RichTextExample extends Component {
 
@@ -19,6 +23,15 @@ export default class RichTextExample extends Component {
     render() {
         return (
             <View style={styles.container}>
+
+                <View style={styles.btnOuterView}>
+                    <TouchableHighlight onPress={() => {alert('get')}} style={{width:'9%'}} underlayColor='transparent'>
+                        <View style={styles.btnView}>
+                            <Image style={{width:23, height:23}} source={require('../../assets/comments.png')} />
+                        </View>
+                    </TouchableHighlight>
+                </View>
+
                 <RichTextEditor
                     ref={(r)=>this.richtext = r}
                     style={styles.richText}
@@ -59,7 +72,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#ffffff',
-        paddingTop: 40,
+        paddingTop: 5,
         borderColor:'lightgray',
         margin:4,
         borderRadius:5,
@@ -70,5 +83,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'transparent',
         height:100
+    },
+    btnOuterView: {
+        paddingRight:5,
+        justifyContent:'flex-end',
+        alignItems:'flex-end',
+    },
+    btnView: {
+        height:26,
+        borderRadius:6,
+        alignItems:'center',
+        justifyContent:'center'
     },
 });
