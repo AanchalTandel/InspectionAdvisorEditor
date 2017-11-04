@@ -244,6 +244,13 @@ class AgentInformation extends Component{
         })
     };
 
+    onImageDeleted = () => {
+        agentInfo['image_path'] = '';
+        this.setState({
+            image: require('../../../assets/lane.jpeg')
+        })
+    };
+
     updateAgentData = (data) => {
         //let newAgent = _.omit(data,'id');
         debugger
@@ -398,7 +405,7 @@ class AgentInformation extends Component{
                                        text={(this.state.agent) ? this.state.agent.zip : agentInfo['zip']}
                                        onUpdateData={this.onUpdate}/>
 
-                        <ImageUpload onImageUpload={this.selectPhotoTapped} images={this.state.image} />
+                        <ImageUpload onImageUpload={this.selectPhotoTapped} onImageDelete={this.onImageDeleted} images={this.state.image} />
 
                         <TouchableHighlight style={style.edit} underlayColor='transparent' onPress={()=>this.onPressSave()}>
                             <View style={[style.btnview,{backgroundColor:Const.appblue}]}>
