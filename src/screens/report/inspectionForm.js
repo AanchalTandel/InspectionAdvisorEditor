@@ -172,11 +172,6 @@ debugger
                 <View style={style.modalContent}>
                     <View style={{alignItems:'center',justifyContent:'center'}}>
                     <MediaModal progress={this.state.progress} textSms={this.state.textSms} />
-
-                    <View style={{alignItems:'center'}}>
-                    <Text style={{fontSize:12,padding:5}}>
-                    </Text>
-                    </View>
                     </View>
                 </View>
             }
@@ -302,7 +297,7 @@ debugger
                 .progress((e) => {
                     this.setState({progress:e.loaded / e.total});
                     if(e.loaded / e.total === 1 ){
-                        this.setState({progress:0, textSms:'Media uploading...! '});
+                        this.setState({progress:0, textSms:'Media Uploading...! '});
                     };
                     console.log(e.loaded / e.total);
                 });
@@ -523,7 +518,7 @@ debugger
                 .progress((e) => {
                     this.setState({progress:e.loaded / e.total});
                     if(e.loaded / e.total === 1 ){
-                        this.setState({progress:0, textSms:'please wait, just second '});
+                        this.setState({progress:0, textSms:'Media Uploading..!'});
                     };
                     console.log(e.loaded / e.total);
                 });
@@ -754,7 +749,7 @@ debugger
                     </View>
 
 
-                    <TextEditor style={{height:400,margin:4,borderRadius:5,borderColor:'gray',borderWidth:1}}/>
+                    <TextEditor style={{height:400,margin:4,borderRadius:5,borderColor:'gray',borderWidth:1}} onComment={this.onCommentPress} comment={this.state.commentData}/>
 
 
                     <View style={style.btnOuterView}>
