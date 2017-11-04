@@ -103,7 +103,7 @@ class InspectionForm extends Component {
             progress:0,
             visibleModal: null,
             onComment:false,
-            commentData:'',
+            commentData:'Test Data',
             dataSource:ds.cloneWithRows(datas),
             selectedItem: 'select one option',
 
@@ -123,19 +123,25 @@ class InspectionForm extends Component {
             .then((response)=>{
 
             let data  = response.comments.data
-            let  temp = _.filter(data,{report_subsection_id:6447});
+            let  temp = _.filter(data,{report_subsection_id:this.state.subsectionID});
 
+            if(temp.length > 0){
                 let newDataSource = ds.cloneWithRows(temp);
                 this.setState({
                     dataSource: newDataSource
                 });
+            } else{
+                let newDataSource = ds.cloneWithRows([{'comment':'No Existing Comment'}]);
+                this.setState({
+                    dataSource: newDataSource
+                });
+            }
 
-                console.log('comm', this.state.comments)
             })
             .catch((err)=>{
                 debugger
             });
-
+debugger
 
         return(
             <TouchableHighlight onPress={()=>this.setState({
@@ -164,9 +170,6 @@ class InspectionForm extends Component {
                     ||
 
                 <View style={style.modalContent}>
-                    <View style={{alignItems:'center',justifyContent:'center'}}>
-                        <Text style={{marginBottom:10}}>Media uploading...!</Text>
-                    </View>
                     <View style={{alignItems:'center',justifyContent:'center'}}>
                     <MediaModal progress={this.state.progress} textSms={this.state.textSms} />
 
@@ -299,7 +302,7 @@ class InspectionForm extends Component {
                 .progress((e) => {
                     this.setState({progress:e.loaded / e.total});
                     if(e.loaded / e.total === 1 ){
-                        this.setState({progress:0, textSms:'please wait, just second '});
+                        this.setState({progress:0, textSms:'Media uploading...! '});
                     };
                     console.log(e.loaded / e.total);
                 });
