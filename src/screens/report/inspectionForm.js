@@ -5,13 +5,15 @@ import {
     ScrollView,
     StatusBar,
     Text,
-    TouchableHighlight, CameraRoll, Alert, Platform
+    TouchableHighlight,
+    Alert,
+    Platform,
+    ListView,
 } from 'react-native';
 import RNImageTools from "react-native-image-tools";
 import Modal from 'react-native-modal';
-import MediaModal from '../component/mediaModal';
-import * as Progress from 'react-native-progress';
 import findIndex from 'lodash/findIndex';
+import MediaModal from '../component/mediaModal';
 import Checkbox from '../component/checkbox/checkboxView';
 import TextBox from '../component/textview/textbox';
 import RadioButton from '../component/radiobutton/radiobuttonView';
@@ -36,6 +38,9 @@ import {
     deleteReportVideo,
     updateReportImage
 } from '../../actions/reportFormDataAction';
+import {
+    getComment
+} from '../../actions/commentAction';
 import MultipleImageUpload from '../../screens/component/imageUpload/multipleImageUpload';
 import MultipleVideoUpload from '../../screens/component/videoUpload/multipleVideoUpload';
 import { getImage, getVideo } from '../../services/getImageVideoCall';
@@ -45,6 +50,7 @@ import TextEditor from '../../screens/component/textEditor'
 let views = null;
 let form_data = {};
 let reportformdata = {};
+let _ = require('lodash');
 
 
 /*var blitline = require('blitline-s3')({
@@ -53,8 +59,12 @@ let reportformdata = {};
     NAME_PREFIX: 'uploads/' // Prefix for New Images Created By Blitline
 });*/
 
+const datas = [{'comment':'Searching'}];
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 class InspectionForm extends Component {
+
+
 
     static navigationOptions = props => {
         const {navigation} = props  ;
@@ -72,6 +82,8 @@ class InspectionForm extends Component {
 
     constructor(props) {
         super(props);
+
+
         this.state = {
             elements: this.props.elements,
             formdata: this.props.formdata,
@@ -90,7 +102,11 @@ class InspectionForm extends Component {
             opened: false,
             progress:0,
             visibleModal: null,
-            selectedItem: 'select one option'
+            onComment:false,
+            commentData:'',
+            dataSource:ds.cloneWithRows(datas),
+            selectedItem: 'select one option',
+
         }
 
         this._openEditor = this._openEditor.bind(this);
@@ -98,25 +114,74 @@ class InspectionForm extends Component {
     }
 
     static onSendReport = () => {
-        that.setState({ visibleModal: 1 })
-    }
+        this.setState({ visibleModal: 1 })
+    };
+
+    renderFilterRow = (data) => {
+
+        this.props.getComment()
+            .then((response)=>{
+
+            let data  = response.comments.data
+            let  temp = _.filter(data,{report_subsection_id:6447});
+
+                let newDataSource = ds.cloneWithRows(temp);
+                this.setState({
+                    dataSource: newDataSource
+                });
+
+                console.log('comm', this.state.comments)
+            })
+            .catch((err)=>{
+                debugger
+            });
+
+
+        return(
+            <TouchableHighlight onPress={()=>this.setState({
+                commentData:data.comment,
+                visibleModal: 0
+            })} underlayColor="transparent">
+                <View style={{flex:1,alignItems:'flex-start',padding:10}}>
+                    <Text style={{textAlign:'center',flex:1}}>{data.comment}</Text>
+                </View>
+            </TouchableHighlight>
+        );
+    };
 
     renderModalContent = () => (
-        <View style={style.modalContent}>
-                <View style={{alignItems:'center',justifyContent:'center'}}>
-                    <Text style={{marginBottom:10}}>Media uploading...!</Text>
+        <View>
+            {
+                (this.state.onComment)
+                &&
+                <View style={style.commentRow}>
+                    <ListView
+                        dataSource={this.state.dataSource}
+                        renderRow={(rowData) => this.renderFilterRow(rowData)}
+                    />
                 </View>
-                <View style={{alignItems:'center',justifyContent:'center'}}>
+
+                    ||
+
+                <View style={style.modalContent}>
+                    <View style={{alignItems:'center',justifyContent:'center'}}>
+                        <Text style={{marginBottom:10}}>Media uploading...!</Text>
+                    </View>
+                    <View style={{alignItems:'center',justifyContent:'center'}}>
                     <MediaModal progress={this.state.progress} textSms={this.state.textSms} />
 
-                        <View style={{alignItems:'center'}}>
-                            <Text style={{fontSize:12,padding:5}}>
-
-                            </Text>
-                        </View>
+                    <View style={{alignItems:'center'}}>
+                    <Text style={{fontSize:12,padding:5}}>
+                    </Text>
+                    </View>
+                    </View>
                 </View>
+            }
         </View>
+
+
     );
+
 
     onPresSelect = ({ id, options }) => {
         if (!this.state.opened) {
@@ -501,7 +566,7 @@ class InspectionForm extends Component {
 
                 this.props.getReportData(this.state.subsectionID,this.state.reportID)
                     .then((response) => {
-                        if(response.filedata.length == 0){
+                        if(response.filedata.length === 0){
                             this.setState({
                                 isContainData:false
                             })
@@ -595,6 +660,13 @@ class InspectionForm extends Component {
 
     }
 
+    onCommentPress = () => {
+        this.setState({
+            visibleModal: 1,
+            onComment:true
+        })
+    }
+
 
     render() {
         return (
@@ -679,7 +751,7 @@ class InspectionForm extends Component {
                     </View>
 
 
-                    <TextEditor style={{height:400,margin:4,borderRadius:5,borderColor:'gray',borderWidth:1}}/>
+                    <TextEditor style={{height:400,margin:4,borderRadius:5,borderColor:'gray',borderWidth:1}} onComment={this.onCommentPress} comment={this.state.commentData}/>
 
 
                     <View style={style.btnOuterView}>
@@ -700,7 +772,7 @@ class InspectionForm extends Component {
                                 <Text style={{color:'white',fontSize:FontSize.regFont}}>Add Image</Text>
                             </View>
 
-  </TouchableHighlight>
+                        </TouchableHighlight>
                     </View>
 
 
@@ -752,7 +824,8 @@ export default connect(mapStateToProps, {
     getReportVideo,
     deleteReportImage,
     deleteReportVideo,
-    updateReportImage
+    updateReportImage,
+    getComment
 })(InspectionForm);
 
 
@@ -801,6 +874,14 @@ const style = StyleSheet.create({
         borderRadius: 15,
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
+    commentRow:{
+        backgroundColor: 'white',
+        padding: 22,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+    }
 });
 
 

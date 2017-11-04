@@ -39,6 +39,7 @@ module.exports = {
     deleteImage : 'reportimage/delete/',
     deleteVideo : 'reportvideo/delete/',
     generateReport: 'generatereport/',
+    comments : 'comments',
 
 
     //FONT
