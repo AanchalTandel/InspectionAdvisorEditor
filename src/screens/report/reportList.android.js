@@ -114,9 +114,7 @@ class ReportList extends Component{
         return(
 
             <View style={{backgroundColor:'white',flex:1,alignItems:'center'}}>
-                {
-                    this.state.isLoading && <Loader visible="true"/> || null
-                }
+
                 <ScrollView style={{flex:1}}
                             bounces={false}
                             horizontal={false}
@@ -145,6 +143,9 @@ class ReportList extends Component{
                         <Image style={{height:45,width:45}} source={require('../../assets/add.png')}/>
                     </TouchableHighlight>
                 </View>
+                {
+                    this.state.isLoading && <Loader visible="true"/> || null
+                }
             </View>
         );
     }

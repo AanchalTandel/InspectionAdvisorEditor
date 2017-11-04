@@ -45,7 +45,12 @@ export default class Setting extends Component{
 
          if(title == "Log Out"){
              return AsyncStorage.removeItem('user', (err) => {
-                 this.props.navigation.dispatch(navigateAction);
+                 this.props.navigation.dispatch(NavigationActions.reset({
+                     index: 0,
+                     actions: [
+                         NavigationActions.navigate({ routeName: 'LogIn' })
+                     ]
+                 }))
                  return Promise.resolve(true)
              });
         }
