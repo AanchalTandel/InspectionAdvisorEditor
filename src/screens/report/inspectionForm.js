@@ -685,7 +685,7 @@ class InspectionForm extends Component {
                     <View style={style.btnOuterView}>
                         <TouchableHighlight onPress={() => {this.onSave()}} style={{flex:1,width:'30%'}} underlayColor='transparent'>
                             <View style={style.btnView}>
-                                <Text style={{color:'white',fontSize:FontSize.regFont,fontWeight:'bold', alignItems:'center'}}>SAVE</Text>
+                                <Text style={{color:'white',fontSize:FontSize.regFont, alignItems:'center'}}>SAVE</Text>
                             </View>
                         </TouchableHighlight>
                     </View>
@@ -697,9 +697,10 @@ class InspectionForm extends Component {
                     <View style={style.btnOuterView}>
                         <TouchableHighlight onPress={() => {this.selectPhotoTapped()}} style={{flex:1,width:'100%'}} underlayColor='transparent'>
                             <View style={style.btnView}>
-                                <Text style={{color:'white',fontSize:FontSize.regFont,fontWeight:'bold'}}>Add Image</Text>
+                                <Text style={{color:'white',fontSize:FontSize.regFont}}>Add Image</Text>
                             </View>
-                        </TouchableHighlight>
+
+  </TouchableHighlight>
                     </View>
 
 
@@ -712,7 +713,7 @@ class InspectionForm extends Component {
                     <View style={style.btnOuterView}>
                         <TouchableHighlight onPress={() => {this.selectVideoTapped()}} style={{flex:1,width:'100%'}} underlayColor='transparent'>
                             <View style={style.btnView}>
-                                <Text style={{color:'white',fontSize:FontSize.regFont,fontWeight:'bold'}}>Add Video</Text>
+                                <Text style={{color:'white',fontSize:FontSize.regFont}}>Add Video</Text>
                             </View>
                         </TouchableHighlight>
                     </View>

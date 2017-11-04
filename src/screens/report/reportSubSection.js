@@ -88,6 +88,7 @@ class ReportSubSection extends Component{
 
 
     onSelectSubction = (selectedId,subsectionName) => {
+        debugger
         this.props.navigation.navigate('Form',{reportID:this.state.reportid,sectionID:this.state.reportsubsectionid,subSectionID:selectedId,name:subsectionName, organizationid:this.state.organizationid});
     };
 

@@ -57,32 +57,33 @@ class AgentInformation extends Component{
             opened: false,
             isContainMetadata: false,
             isSearch:false,
-            filteredAgent:['1','2']
-           // dataSource: ds.cloneWithRows(searchAgent),
+            filteredAgent:['1','2'],
+            isFromSearch:false
+            // dataSource: ds.cloneWithRows(searchAgent),
         }
     }
 
     componentWillMount(){
         this.props.getAgentInformation(this.state.reportid)
             .then((response)=>{
-            debugger
-            if(response.agent){
-                this.setState({
-                    agent:response.agent,
-                    isContainMetadata: true,
-                    id:response.agent.id,
-                    selected:response.agent.state,
-                    image:{uri : (!response.agent) ? "http://notavailableimage" : ((response.agent.image_path) ? response.agent.image_path : "http://notavailableimage")}
-                })
-            }else{
-                this.setState({
-                    agent:null,
-                    id:null,
-                    selected:'Select State',
-                    isContainMetadata: false,
-                    image:{uri : (!this.props.property) ? "http://notavailableimage" : this.props.property.image_path}
-                })
-            }
+                debugger
+                if(response.agent){
+                    this.setState({
+                        agent:response.agent,
+                        isContainMetadata: true,
+                        id:response.agent.id,
+                        selected:response.agent.state,
+                        image:{uri : (!response.agent) ? "http://notavailableimage" : ((response.agent.image_path) ? response.agent.image_path : "http://notavailableimage")}
+                    })
+                }else{
+                    this.setState({
+                        agent:null,
+                        id:null,
+                        selected:'Select State',
+                        isContainMetadata: false,
+                        image:{uri : (!this.props.property) ? "http://notavailableimage" : this.props.property.image_path}
+                    })
+                }
 
             })
             .catch((err)=>{
@@ -166,8 +167,31 @@ class AgentInformation extends Component{
     onSave = () => {
 
         if(!this.state.isContainMetadata){
-debugger
-            if(!(JSON.stringify(agentInfo) === '{}')){
+            debugger
+            /* if(!(JSON.stringify(agentInfo) === '{}')){
+
+             }else{
+                 this.state.agent['report_id'] = this.state.reportid
+                 this.props.addAgentInformation(this.state.reportid,this.state.agent)
+                     .then(()=>{
+                         alert('Agent saved successfully')
+                     })
+                     .catch((err)=>{
+                         alert(err.response.data.msg)
+                     });
+             }*/
+
+
+            if(this.state.isFromSearch){
+                this.props.updateAgentInformation(this.state.reportid,this.state.agent.id,agentInfo)
+                    .then(()=>{
+                        alert('Agent updated successfully')
+                        agentInfo = {}
+                    })
+                    .catch((err)=>{
+                        alert(err.response.data.msg)
+                    });
+            }else{
                 agentInfo['report_id'] = this.state.reportid
                 this.props.addAgentInformation(this.state.reportid,agentInfo)
                     .then(()=>{
@@ -177,43 +201,25 @@ debugger
                     .catch((err)=>{
                         alert(err.response.data.msg)
                     });
-            }else{
-                this.state.agent['report_id'] = this.state.reportid
-                this.props.addAgentInformation(this.state.reportid,this.state.agent)
-                    .then(()=>{
-                        alert('Agent saved successfully')
-                    })
-                    .catch((err)=>{
-                        alert(err.response.data.msg)
-                    });
             }
+
+
+
 
 
         }else{
             debugger
 
-            if(!(JSON.stringify(agentInfo) === '{}')){
-                this.props.updateAgentInformation(this.state.reportid,this.state.id,agentInfo)
-                    .then(()=>{
-                        alert('Agent updated successfully')
-                        agentInfo = {}
-                    })
-                    .catch((err)=>{
-                        alert(err.response.data.msg)
-                    });
-            }else{
 
-               // let newAgent = _.remove(this.state.agent, 'id');
-               // debugger
+            this.props.updateAgentInformation(this.state.reportid,this.state.agent.id,agentInfo)
+                .then(()=>{
+                    alert('Agent updated successfully')
+                    agentInfo = {}
+                })
+                .catch((err)=>{
+                    alert(err.response.data.msg)
+                });
 
-                this.props.updateAgentInformation(this.state.reportid,this.state.agent.id,this.state.agent)
-                    .then(()=>{
-                        alert('Agent updated successfully')
-                    })
-                    .catch((err)=>{
-                        alert(err.response.data.msg)
-                    });
-            }
 
         }
 
@@ -241,11 +247,12 @@ debugger
     updateAgentData = (data) => {
         //let newAgent = _.omit(data,'id');
         debugger
-agentInfo = data
+        agentInfo = data
         this.setState({
             agent:data,
             isSearch:false,
             selected:data.state,
+            isFromSearch:true
             //isContainMetadata:true
         })
     }
@@ -254,21 +261,21 @@ agentInfo = data
     renderFilterRow = (rowData) => {
         return(
             <TouchableHighlight onPress={() => this.updateAgentData(rowData)} underlayColor='trnsparent'>
-            <View style={{borderWidth:0.5,borderColor:'lightgray', flexDirection:'row', padding:5, alignItems:'center'}}>
-                <View>
-                    <Image source={(rowData.image_path) ? {uri:(rowData.image_path)} : require('../../../assets/profImage.jpeg')}
-                           style={{height:30, width:30, borderRadius:15}} />
-                </View>
-                <View style={{marginLeft:10}}>
-                    <View style={{flexDirection:'row'}}>
-                        <Text>{rowData.first_name}</Text>
-                        <Text> {rowData.last_name}</Text>
-                    </View>
+                <View style={{borderWidth:0.5,borderColor:'lightgray', flexDirection:'row', padding:5, alignItems:'center'}}>
                     <View>
-                        <Text>{rowData.email}</Text>
+                        <Image source={(rowData.image_path) ? {uri:(rowData.image_path)} : require('../../../assets/profImage.jpeg')}
+                               style={{height:30, width:30, borderRadius:15}} />
+                    </View>
+                    <View style={{marginLeft:10}}>
+                        <View style={{flexDirection:'row'}}>
+                            <Text>{rowData.first_name}</Text>
+                            <Text> {rowData.last_name}</Text>
+                        </View>
+                        <View>
+                            <Text>{rowData.email}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
             </TouchableHighlight>
         );
     }
@@ -279,7 +286,8 @@ agentInfo = data
             .then((res)=>{
                 let filterAgent = res.agents.data
                 this.setState({
-                    filteredAgent:filterAgent
+                    filteredAgent:filterAgent,
+                    isFromSearch:true
                 })
             })
             .catch((err)=>{
@@ -335,15 +343,15 @@ agentInfo = data
                     <View style={{marginTop:10,flex:1}}>
                         <TouchableHighlight onPress={() => this.onSearchPressed()} underlayColor='transparent'>
                             <View>
-                        <SearchBar
-                            noIcon
-                            lightTheme
-                            round
-                            ref={search => this.search = search}
-                            onChangeText={(text)=>this.onFilterAgent(text)}
-                            //onBlur={() => this.setState({isSearch:false})}
-                            onFocus={()=>this.onSearchPressed()}
-                            placeholder='Select Existing Agent' />
+                                <SearchBar
+                                    noIcon
+                                    lightTheme
+                                    round
+                                    ref={search => this.search = search}
+                                    onChangeText={(text)=>this.onFilterAgent(text)}
+                                    //onBlur={() => this.setState({isSearch:false})}
+                                    onFocus={()=>this.onSearchPressed()}
+                                    placeholder='Select Existing Agent' />
                             </View>
                         </TouchableHighlight>
 
@@ -405,19 +413,19 @@ agentInfo = data
                             &&
 
                             <View style={style.searchView}>
-                             <ListView
-                                 dataSource={ds.cloneWithRows(this.state.filteredAgent)}
-                                renderRow={(rowData) => this.renderFilterRow(rowData)}
-                             />
+                                <ListView
+                                    dataSource={ds.cloneWithRows(this.state.filteredAgent)}
+                                    renderRow={(rowData) => this.renderFilterRow(rowData)}
+                                />
                             </View>
 
                             ||
 
-                             null
+                            null
 
                         }
 
-            </View>
+                    </View>
                 </ScrollView>
 
                 <View style={style.viewContainer}>

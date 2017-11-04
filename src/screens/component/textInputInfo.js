@@ -2,7 +2,8 @@ import React,{ Component } from 'react';
 import {
     StyleSheet,
     View,
-    TextInput
+    TextInput,
+    Platform
 } from 'react-native';
 import Const from '../../helper/constant';
 import FontSize from '../../helper/fontsize';
@@ -47,8 +48,10 @@ export default class TextInputInfo extends Component{
                 }]}>
                     <TextInput
                         ref = "2"
-                        style={{borderRadius:25,fontSize:FontSize.regFont,paddingLeft:15,flex:1,
-                            justifyContent:'flex-end',backgroundColor: 'transparent', margin:8}}
+                        style={{borderRadius:25,fontSize:FontSize.regFont,paddingLeft:15,flex:1,justifyContent:'flex-end',
+                            backgroundColor: 'transparent',
+                            height: Platform.OS === 'ios' ? 15 : null,
+                            margin: Platform.OS === 'ios' ? null : 2 }}
                         placeholder={this.state.placeHolder}
                         placeholderTextColor={Const.appblue}
                         underlineColorAndroid="transparent"

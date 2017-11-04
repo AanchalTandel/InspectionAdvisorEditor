@@ -17,7 +17,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-
+  
+  [application setStatusBarHidden:NO];
+  [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+  UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
+  statusBar.backgroundColor = [UIColor colorWithRed:102/255.0 green:112/255.0 blue:124/255.0 alpha:1];
+  
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation

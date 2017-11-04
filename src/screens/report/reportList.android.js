@@ -29,7 +29,7 @@ class ReportList extends Component{
         return {
             title: 'Inspections',
             headerStyle: {backgroundColor: Const.lbgray,justifyContent:'space-between'},
-            headerTitleStyle: {color: 'white',width:Const.width-90,fontSize:FontSize.header,alignItems:'center',textAlign:'center',marginLeft:10},
+            headerTitleStyle: {color: 'white',width:Const.width-90,fontSize:FontSize.header,alignItems:'center',textAlign:'center',marginLeft:8},
             headerTintColor: 'white',
             headerBackTitle: null,
             headerLeft:<Image style={style.headerimage} source={require('../../assets/menu.png')}
