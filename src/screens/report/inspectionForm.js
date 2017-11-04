@@ -9,6 +9,7 @@ import {
     Alert,
     Platform,
     ListView,
+    Image
 } from 'react-native';
 import RNImageTools from "react-native-image-tools";
 import Modal from 'react-native-modal';
@@ -160,12 +161,20 @@ debugger
             {
                 (this.state.onComment)
                 &&
-                <View style={style.commentRow}>
-                    <ListView
-                        dataSource={this.state.dataSource}
-                        renderRow={(rowData) => this.renderFilterRow(rowData)}
-                    />
+                <View style={{backgroundColor:'#fff', }}>
+                    <View style={{ alignItems:'flex-end', justifyContent:'flex-end',}}>
+                        <TouchableHighlight onPress={() => this.setState({visibleModal:null})}>
+                            <Image source={require('../../assets/cancel.png')} style={{tintColor:'#000', width:20, height:20}} />
+                        </TouchableHighlight>
+                    </View>
+                    <View style={style.commentRow}>
+                        <ListView
+                            dataSource={this.state.dataSource}
+                            renderRow={(rowData) => this.renderFilterRow(rowData)}
+                        />
+                    </View>
                 </View>
+
 
                     ||
 
@@ -523,7 +532,7 @@ debugger
                 .progress((e) => {
                     this.setState({progress:e.loaded / e.total});
                     if(e.loaded / e.total === 1 ){
-                        this.setState({progress:0, textSms:'please wait, just second '});
+                        this.setState({progress:0, textSms:'Media uploading..!'});
                     };
                     console.log(e.loaded / e.total);
                 });
