@@ -27,3 +27,6 @@ export const  SET_PROPERTY = "SET_PROPERTY";
 export const  SET_CLIENT = "SET_CLIENT";
 export const  SET_AGENT = "SET_AGENT";
 
+//COMMENT
+export const SET_COMMENT = "COMMENT";
+

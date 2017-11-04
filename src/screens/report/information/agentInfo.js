@@ -167,20 +167,6 @@ class AgentInformation extends Component{
     onSave = () => {
 
         if(!this.state.isContainMetadata){
-            debugger
-            /* if(!(JSON.stringify(agentInfo) === '{}')){
-
-             }else{
-                 this.state.agent['report_id'] = this.state.reportid
-                 this.props.addAgentInformation(this.state.reportid,this.state.agent)
-                     .then(()=>{
-                         alert('Agent saved successfully')
-                     })
-                     .catch((err)=>{
-                         alert(err.response.data.msg)
-                     });
-             }*/
-
 
             if(this.state.isFromSearch){
                 this.props.updateAgentInformation(this.state.reportid,this.state.agent.id,agentInfo)
@@ -204,12 +190,7 @@ class AgentInformation extends Component{
             }
 
 
-
-
-
         }else{
-            debugger
-
 
             this.props.updateAgentInformation(this.state.reportid,this.state.agent.id,agentInfo)
                 .then(()=>{

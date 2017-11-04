@@ -9,23 +9,34 @@ import {
 } from 'react-native';
 import {RichTextEditor, RichTextToolbar} from 'react-native-zss-rich-text-editor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import Modal from 'react-native-modal';
 import Const from '../../helper/constant';
 import FontSize from '../../helper/fontsize';
 
 export default class RichTextExample extends Component {
 
     constructor(props) {
+        debugger
         super(props);
         this.getHTML = this.getHTML.bind(this);
         this.setFocusHandlers = this.setFocusHandlers.bind(this);
+        this.state = {
+            comment:props.comment
+        }
     }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            comment:nextProps.comment
+        })
+    }
+
 
     render() {
         return (
             <View style={styles.container}>
-
                 <View style={styles.btnOuterView}>
-                    <TouchableHighlight onPress={() => {alert('get')}} style={{width:'9%'}} underlayColor='transparent'>
+                    <TouchableHighlight onPress={() => this.props.onComment()} style={{width:'9%'}} underlayColor='transparent'>
                         <View style={styles.btnView}>
                             <Image style={{width:23, height:23}} source={require('../../assets/comments.png')} />
                         </View>
@@ -35,7 +46,7 @@ export default class RichTextExample extends Component {
                 <RichTextEditor
                     ref={(r)=>this.richtext = r}
                     style={styles.richText}
-                    initialTitleHTML={'Title!!'}
+                    initialTitleHTML={this.state.comment}
                     editorInitializedCallback={() => this.onEditorInitialized()}
                 />
                 <RichTextToolbar
@@ -47,6 +58,7 @@ export default class RichTextExample extends Component {
     }
 
     onEditorInitialized() {
+        debugger
         this.setFocusHandlers();
         this.getHTML();
     }
