@@ -104,7 +104,7 @@ class InspectionForm extends Component {
             progress:0,
             visibleModal: null,
             onComment:false,
-            commentData:'Test Data',
+            commentData:null,
             dataSource:ds.cloneWithRows(datas),
             selectedItem: 'select one option',
 
@@ -142,12 +142,13 @@ class InspectionForm extends Component {
             .catch((err)=>{
                 debugger
             });
-debugger
+
 
         return(
-            <TouchableHighlight onPress={()=>this.setState({
+            <TouchableHighlight onPress={() => this.setState({
                 commentData:data.comment,
-                visibleModal: 0
+                visibleModal:0,
+                onComment:false
             })} underlayColor="transparent">
                 <View style={{flex:1,alignItems:'flex-start',padding:10}}>
                     <Text style={{textAlign:'center',flex:1}}>{data.comment}</Text>
@@ -163,7 +164,7 @@ debugger
                 &&
                 <View style={{backgroundColor:'#fff', }}>
                     <View style={{ alignItems:'flex-end', justifyContent:'flex-end',}}>
-                        <TouchableHighlight onPress={() => this.setState({visibleModal:null})}>
+                        <TouchableHighlight onPress={() => this.setState({visibleModal:0,onComment:false})}>
                             <Image source={require('../../assets/cancel.png')} style={{tintColor:'#000', width:20, height:20}} />
                         </TouchableHighlight>
                     </View>
@@ -338,7 +339,7 @@ debugger
 
                 this.props.getReportImages(this.state.subsectionID, this.state.reportID)
                     .then((response) => {
-                        this.setState({image: response.images, isLoading:false})
+                        this.setState({image: response.images, isLoading:false,txtSms:''})
                     })
                     .catch(() => {
 
@@ -869,7 +870,7 @@ const style = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: 'white',
-        padding: 22,
+        padding: 30,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,

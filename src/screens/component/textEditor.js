@@ -9,9 +9,6 @@ import {
 } from 'react-native';
 import {RichTextEditor, RichTextToolbar} from 'react-native-zss-rich-text-editor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import Modal from 'react-native-modal';
-import Const from '../../helper/constant';
-import FontSize from '../../helper/fontsize';
 
 export default class RichTextExample extends Component {
 
@@ -25,12 +22,31 @@ export default class RichTextExample extends Component {
         }
     }
 
+
+    componentDidMount() {
+        if (this.richtext) {
+            this.richtext.registerContentChangeListener(this.handleChange);
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
+        if(nextProps.comment != null){
+         //   alert(nextProps.comment)
+        }
+
         this.setState({
             comment:nextProps.comment
         })
     }
 
+    handleChange = (message) => {
+        this.setState({comment:message})
+    };
+
+    setData = (comment) => {
+        const payload = {"type":"CONTENT_CHANGE","data":{"content":comment}};
+        this.richtext.onBridgeMessage(JSON.stringify(payload));
+    };
 
     render() {
         return (
@@ -43,12 +59,17 @@ export default class RichTextExample extends Component {
                     </TouchableHighlight>
                 </View>
 
+
                 <RichTextEditor
                     ref={(r)=>this.richtext = r}
                     style={styles.richText}
-                    initialTitleHTML={this.state.comment}
+                    enableOnChange
+                    onChange={this.handleChange}
+                    contentPlaceholder="Enter Comments Here...."
+                    initialContentHTML={this.state.comment}
                     editorInitializedCallback={() => this.onEditorInitialized()}
                 />
+
                 <RichTextToolbar
                     getEditor={() => this.richtext}
                 />
@@ -57,8 +78,7 @@ export default class RichTextExample extends Component {
         );
     }
 
-    onEditorInitialized() {
-        debugger
+    onEditorInitialized() {``
         this.setFocusHandlers();
         this.getHTML();
     }
