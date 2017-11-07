@@ -8,7 +8,8 @@ const defaultActions = [
     actions.setItalic,
     actions.insertBulletsList,
     actions.insertOrderedList,
-    actions.insertLink
+    actions.insertLink,
+    actions.setTextColor,
 ];
 
 function getDefaultIcon() {
@@ -19,6 +20,7 @@ function getDefaultIcon() {
     texts[actions.insertBulletsList] = require('../img/icon_format_ul.png');
     texts[actions.insertOrderedList] = require('../img/icon_format_ol.png');
     texts[actions.insertLink] = require('../img/icon_format_link.png');
+    texts[actions.setTextColor] = require('../img/icon_format_media.png');
     return texts;
 }
 
@@ -141,6 +143,7 @@ export default class RichTextToolbar extends Component {
             case actions.setItalic:
             case actions.insertBulletsList:
             case actions.insertOrderedList:
+
             case actions.setUnderline:
             case actions.heading1:
             case actions.heading2:

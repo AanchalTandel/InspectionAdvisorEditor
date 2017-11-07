@@ -9,7 +9,8 @@ import {
     AppRegistry,
 } from 'react-native';
 import App from './src/screens/app';
+import colorPicker from './src/screens/report/colorPicker';
 
 
-AppRegistry.registerComponent('TextEditorApp', () => App);
+AppRegistry.registerComponent('TextEditorApp', () => colorPicker);
 

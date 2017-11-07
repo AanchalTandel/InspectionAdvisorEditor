@@ -164,7 +164,7 @@ class InspectionForm extends Component {
                 &&
                 <View style={{backgroundColor:'#fff', }}>
                     <View style={{ alignItems:'flex-end', justifyContent:'flex-end',}}>
-                        <TouchableHighlight onPress={() => this.setState({visibleModal:0,onComment:false})}>
+                        <TouchableHighlight onPress={() => this.setState({visibleModal:0,onComment:false})} underlayColor='transparent'>
                             <Image source={require('../../assets/cancel.png')} style={{tintColor:'#000', width:20, height:20}} />
                         </TouchableHighlight>
                     </View>

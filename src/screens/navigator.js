@@ -31,6 +31,7 @@ import invoice from '../screens/report/information/invoice';
 import createreport from '../screens/report/createReport';
 
 
+
 const StackModalNavigator = (routeConfigs, navigatorConfig) => {
     const CardStackNavigator = StackNavigator(routeConfigs, navigatorConfig);
     const modalRouteConfig = {};

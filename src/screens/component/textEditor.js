@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {RichTextEditor, RichTextToolbar} from 'react-native-zss-rich-text-editor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import Const from '../../helper/constant';
 
 export default class RichTextExample extends Component {
 
@@ -44,20 +45,15 @@ export default class RichTextExample extends Component {
     };
 
     setData = (comment) => {
-        const payload = {"type":"CONTENT_CHANGE","data":{"content":comment}};
+        const payload = {"type":"CONTENT_CHANGE","data":{"content":"send data"}};
+
         this.richtext.onBridgeMessage(JSON.stringify(payload));
+        this.richtext.setTextColor('#dc143c');
     };
 
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.btnOuterView}>
-                    <TouchableHighlight onPress={() => this.props.onComment()} style={{width:'9%'}} underlayColor='transparent'>
-                        <View style={styles.btnView}>
-                            <Image style={{width:23, height:23}} source={require('../../assets/comments.png')} />
-                        </View>
-                    </TouchableHighlight>
-                </View>
 
 
                 <RichTextEditor
@@ -65,6 +61,7 @@ export default class RichTextExample extends Component {
                     style={styles.richText}
                     enableOnChange
                     onChange={this.handleChange}
+                    hiddenTitle={true}
                     contentPlaceholder="Enter Comments Here...."
                     initialContentHTML={this.state.comment}
                     editorInitializedCallback={() => this.onEditorInitialized()}
@@ -73,6 +70,25 @@ export default class RichTextExample extends Component {
                 <RichTextToolbar
                     getEditor={() => this.richtext}
                 />
+
+                <View style={{position:'absolute',marginTop:120,marginLeft:15}}>
+                    <TouchableHighlight onPress={() => this.setData()} style={{width:'9%'}} underlayColor='transparent'>
+                        <View>
+                            <Image style={{width:23, height:23}} source={require('../../assets/textcolor.png')} />
+                        </View>
+                    </TouchableHighlight>
+                </View>
+
+                <View style={{position:'absolute',marginTop:120,marginLeft:Const.width-55}}>
+                    <TouchableHighlight onPress={() => this.props.onComment()} style={{width:'9%'}} underlayColor='transparent'>
+                        <View>
+                            <Image style={{width:23, height:23}} source={require('../../assets/comments.png')} />
+                        </View>
+                    </TouchableHighlight>
+                </View>
+
+
+
                 {Platform.OS === 'ios' && <KeyboardSpacer/>}
             </View>
         );
@@ -120,11 +136,13 @@ const styles = StyleSheet.create({
         paddingRight:5,
         justifyContent:'flex-end',
         alignItems:'flex-end',
+        backgroundColor:'yellow',
+        position:'absolute'
     },
     btnView: {
         height:26,
         borderRadius:6,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
     },
 });
