@@ -92,10 +92,10 @@ class InspectionForm extends Component {
             sectionID:props.navigation.state.params.sectionID,
             organizationID: props.navigation.state.params.organizationid,
             subsectionID: props.navigation.state.params.subSectionID,
-            isLoading: true,
+            isLoading: false,
             views: [],
-            image: [],
-            video: [],
+            image: props.image,
+            video: props.video,
             imageAWS: [],
             videoAWS: [],
             imgArr: [],
@@ -684,11 +684,6 @@ class InspectionForm extends Component {
     render() {
         return (
             <View style={{backgroundColor: 'white', flex: 1}}>
-                <StatusBar
-                    backgroundColor='gray'
-                    barStyle="default"
-                />
-
                 {this.state.isLoading && <Loader visible="true"/> ||
                 <ScrollView style={{flex: 1, marginBottom: 5}}
                             bounces={false}
@@ -822,7 +817,9 @@ class InspectionForm extends Component {
 const mapStateToProps = state => {
     return {
         elements: state.formelement.elements,
-        formdata: state.reportformdata.formdata
+        formdata: state.reportformdata.formdata,
+        image: state.reportformdata.image,
+        video: state.reportformdata.video
     };
 };
 

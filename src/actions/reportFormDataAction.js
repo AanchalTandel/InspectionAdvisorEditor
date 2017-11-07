@@ -6,7 +6,9 @@ import {
 } from 'react-native';
 import { CallApi } from '../services/apiCall';
 import {
-    SET_FORMDATA
+    SET_FORMDATA,
+    GET_IMAGES,
+    GET_VIDEOS
 } from './type';
 import Constant from '../helper/constant'
 var _ = require('lodash');
@@ -143,6 +145,12 @@ export const getReportImages = (subsecid, reportid) => {
         }).then(()=>{
             return CallApi(Constant.mediaBaseUrl + Constant.reportMediaSubSection + subsecid + "/images/report/" + reportid , 'get', {},{"Authorization":header1})
                 .then((response)=> {
+
+                    dispatch({
+                        type: GET_IMAGES,
+                        payload: response.images,
+                    });
+
                     return Promise.resolve(response);
                 })
                 .catch((error)=>{
@@ -197,6 +205,12 @@ export const getReportVideo = (subsecid, reportid) => {
         }).then(()=>{
             return CallApi(Constant.mediaBaseUrl + Constant.reportMediaSubSection + subsecid + "/videos/report/" + reportid , 'get', {},{"Authorization":header1})
                 .then((response)=> {
+
+                    dispatch({
+                        type: GET_VIDEOS,
+                        payload: response.videos,
+                    });
+
                     return Promise.resolve(response);
                 })
                 .catch((error)=>{

@@ -9,6 +9,7 @@ import {
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import Const from '../../../helper/constant';
+import {CustomCachedImage} from "react-native-img-cache";
 
 export default class MultipleImageUpload extends Component {
 
@@ -60,18 +61,23 @@ export default class MultipleImageUpload extends Component {
         return (
             <View style={{justifyContent:'space-between', margin:4}}>
                 <View style={{height: Const.width/2.5, width: Const.width/3.4, backgroundColor:Const.darkgray, borderRadius:3}}>
-                    <Image style={{flex:1,height:null,width:null}} source={{uri : data.annotated_image ? data.annotated_image : data.original}}
-                           indicator={ProgressBar.Circle}
-                           indicatorProps={{
-                               borderWidth: 0,
-                               color: '#fff',
-                               unfilledColor: '#fff'
-                           }}
-                           onError={(e) => {
-                               this.setState({
-                                   image: require('../../../assets/lane.jpeg')
-                               })
-                           }}/>
+                    <CustomCachedImage
+                        component={Image}
+                        source={{uri : data.annotated_image ? data.annotated_image : data.original}}
+                        indicator={ProgressBar.Circle}
+                        indicatorProps={{
+                            borderWidth: 0,
+                            color: '#fff',
+                            unfilledColor: '#fff'
+                        }}
+                        style={{flex:1,height:null,width:null}}
+                        onError={(e) => {
+                            this.setState({
+                                image: require('../../../assets/lane.jpeg')
+                            })
+                        }}
+                    />
+
                     <View style={{padding:1,width:'80%', alignSelf:'center'}}>
                         <TouchableHighlight onPress={() => this.selectPhotoEdit(sectionID, rowID, data.id, data.original )} underlayColor="transparent">
                             <View style={{backgroundColor:'#fff', flexDirection:'row',justifyContent:'center',alignItems:'center', padding:5, borderRadius:6, borderColor:'lightgray', borderWidth:1}}>
