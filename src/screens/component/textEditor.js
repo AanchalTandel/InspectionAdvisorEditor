@@ -10,6 +10,7 @@ import {
 import {RichTextEditor, RichTextToolbar} from 'react-native-zss-rich-text-editor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Const from '../../helper/constant';
+import ColorPicker from './colorPicker';
 
 export default class RichTextExample extends Component {
 
@@ -19,7 +20,8 @@ export default class RichTextExample extends Component {
         this.getHTML = this.getHTML.bind(this);
         this.setFocusHandlers = this.setFocusHandlers.bind(this);
         this.state = {
-            comment:props.comment
+            comment:props.comment,
+            colorPicker:false
         }
     }
 
@@ -31,25 +33,35 @@ export default class RichTextExample extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.comment != null){
-         //   alert(nextProps.comment)
-        }
-
+        debugger
         this.setState({
             comment:nextProps.comment
         })
+        this.richtext.setContentHTML(nextProps.comment)
     }
 
     handleChange = (message) => {
+        debugger
         this.setState({comment:message})
     };
 
     setData = (comment) => {
-        const payload = {"type":"CONTENT_CHANGE","data":{"content":"send data"}};
-
-        this.richtext.onBridgeMessage(JSON.stringify(payload));
-        this.richtext.setTextColor('#dc143c');
+        //const payload = {"type":"CONTENT_CHANGE","data":{"content":"send data"}};
+       // this.richtext.onBridgeMessage(JSON.stringify(payload));
+        this.richtext.setContentHTML(comment)
     };
+
+
+    changeTextColor = (color) => {
+        this.setState({
+            colorPicker:false
+        })
+        this.richtext.setTextColor(color);
+    }
+
+    onComment = () => {
+        this.props.comment()
+    }
 
     render() {
         return (
@@ -60,7 +72,7 @@ export default class RichTextExample extends Component {
                     ref={(r)=>this.richtext = r}
                     style={styles.richText}
                     enableOnChange
-                    onChange={this.handleChange}
+                    onChange={()=>this.handleChange()}
                     hiddenTitle={true}
                     contentPlaceholder="Enter Comments Here...."
                     initialContentHTML={this.state.comment}
@@ -72,7 +84,7 @@ export default class RichTextExample extends Component {
                 />
 
                 <View style={{position:'absolute',marginTop:120,marginLeft:15}}>
-                    <TouchableHighlight onPress={() => this.setData()} style={{width:'9%'}} underlayColor='transparent'>
+                    <TouchableHighlight onPress={() => this.setState({colorPicker:true})} style={{width:'9%'}} underlayColor='transparent'>
                         <View>
                             <Image style={{width:23, height:23}} source={require('../../assets/textcolor.png')} />
                         </View>
@@ -86,12 +98,29 @@ export default class RichTextExample extends Component {
                         </View>
                     </TouchableHighlight>
                 </View>
+                {
+                    (this.state.colorPicker)
+
+                    &&
+
+                    <View style={{position:'absolute',marginTop:70,marginLeft:10}}>
+                        <ColorPicker onColorSelect={this.changeTextColor}/>
+                    </View>
+
+                    ||
+
+                     null
+
+                }
+
 
 
 
                 {Platform.OS === 'ios' && <KeyboardSpacer/>}
             </View>
         );
+
+
     }
 
     onEditorInitialized() {``

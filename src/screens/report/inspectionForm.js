@@ -124,8 +124,9 @@ class InspectionForm extends Component {
             .then((response)=>{
 
             let data  = response.comments.data
-            let  temp = _.filter(data,{report_subsection_id:this.state.subsectionID});
+            let  temp = _.filter(data,{report_subsection_id:3846});
 
+            debugger
             if(temp.length > 0){
                 let newDataSource = ds.cloneWithRows(temp);
                 this.setState({
@@ -162,10 +163,10 @@ class InspectionForm extends Component {
             {
                 (this.state.onComment)
                 &&
-                <View style={{backgroundColor:'#fff', }}>
-                    <View style={{ alignItems:'flex-end', justifyContent:'flex-end',}}>
+                <View style={{backgroundColor:'#fff',borderRadius:5 }}>
+                    <View style={{ alignItems:'flex-end', justifyContent:'flex-end',marginTop:3,marginRight:3}}>
                         <TouchableHighlight onPress={() => this.setState({visibleModal:0,onComment:false})} underlayColor='transparent'>
-                            <Image source={require('../../assets/cancel.png')} style={{tintColor:'#000', width:20, height:20}} />
+                            <Image source={require('../../assets/cancel.png')} style={{tintColor:'#000', width:15, height:15}} />
                         </TouchableHighlight>
                     </View>
                     <View style={style.commentRow}>
