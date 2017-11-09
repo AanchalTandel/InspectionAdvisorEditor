@@ -9,7 +9,7 @@ import {
 import Constant from '../helper/constant'
 
 
-export const getComment = () => {
+export const getComment = (subSectionID) => {
     return (dispatch, getState) => {
 
         let token = "";
@@ -24,8 +24,9 @@ export const getComment = () => {
             header1 = "Bearer " + token
 
         }).then(()=>{
-            return CallApi(Constant.baseurl+Constant.comments,'get',{},{"Authorization":header1})
+            return CallApi(Constant.baseurl+Constant.comments+ subSectionID,'get',{},{"Authorization":header1})
                 .then((response)=> {
+                debugger
                     // dispatch({
                     //     type: SET_CLIENT,
                     //     payload: response.client,

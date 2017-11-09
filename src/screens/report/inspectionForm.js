@@ -9,7 +9,8 @@ import {
     Alert,
     Platform,
     ListView,
-    Image
+    Image,
+    TextInput
 } from 'react-native';
 import RNImageTools from "react-native-image-tools";
 import Modal from 'react-native-modal';
@@ -107,6 +108,9 @@ class InspectionForm extends Component {
             commentData:null,
             dataSource:ds.cloneWithRows(datas),
             selectedItem: 'select one option',
+            isSearch:false,
+            isCommentData:false,
+            newComment:''
 
         }
 
@@ -118,33 +122,34 @@ class InspectionForm extends Component {
         this.setState({ visibleModal: 1 })
     };
 
-    renderFilterRow = (data) => {
-
-        this.props.getComment()
+    getComments = () => {
+        this.props.getComment(this.state.subsectionID)
             .then((response)=>{
 
-            let data  = response.comments.data
-            let  temp = _.filter(data,{report_subsection_id:3846});
+                let data  = response.comments
+               // let  temp = _.filter(data,{report_subsection_id:this.state.subsectionID});
 
-            debugger
-            if(temp.length > 0){
-                let newDataSource = ds.cloneWithRows(temp);
-                this.setState({
-                    dataSource: newDataSource
-                });
-            } else{
-                let newDataSource = ds.cloneWithRows([{'comment':'No Existing Comment'}]);
-                this.setState({
-                    dataSource: newDataSource
-                });
-            }
+                if(data.length > 0){
+                    let newDataSource = ds.cloneWithRows(data);
+                    this.setState({
+                        dataSource:newDataSource,
+                        isCommentData: true,
+                        isSearch:true
+                    });
+                }else{
+                    this.setState({
+                        isCommentData: false,
+                        isSearch:true
+                    });
+                }
 
             })
             .catch((err)=>{
                 debugger
             });
+    }
 
-
+    renderFilterRow = (data) => {
         return(
             <TouchableHighlight onPress={() => this.setState({
                 commentData:data.comment,
@@ -163,20 +168,94 @@ class InspectionForm extends Component {
             {
                 (this.state.onComment)
                 &&
-                <View style={{backgroundColor:'#fff',borderRadius:5 }}>
+                <View style={{backgroundColor:'white',borderRadius:5}}>
                     <View style={{ alignItems:'flex-end', justifyContent:'flex-end',marginTop:3,marginRight:3}}>
-                        <TouchableHighlight onPress={() => this.setState({visibleModal:0,onComment:false})} underlayColor='transparent'>
+                        <TouchableHighlight onPress={() => this.setState({visibleModal:0,onComment:false,isCommentData:false,isSearch:false})} underlayColor='transparent'>
                             <Image source={require('../../assets/cancel.png')} style={{tintColor:'#000', width:15, height:15}} />
                         </TouchableHighlight>
                     </View>
-                    <View style={style.commentRow}>
-                        <ListView
-                            dataSource={this.state.dataSource}
-                            renderRow={(rowData) => this.renderFilterRow(rowData)}
-                        />
-                    </View>
-                </View>
+                <View style={{padding:20,backgroundColor:'white',borderRadius:5}}>
 
+                    <TouchableHighlight
+                        onPress={()=> this.getComments()}
+                        underlayColor='transparent'>
+                        <View style={{padding:10,borderColor:'lightgray',borderWidth:1,borderRadius:2}}>
+                            <Text>Select Existing Comments</Text>
+                        </View>
+                    </TouchableHighlight>
+                    {
+
+                        (this.state.isSearch  && this.state.isCommentData)
+                        &&
+                        <View style={{backgroundColor:'#fff',borderRadius:5 }}>
+
+                            <View style={style.commentRow}>
+                                <ListView
+                                    dataSource={this.state.dataSource}
+                                    renderRow={(rowData) => this.renderFilterRow(rowData)}
+                                    enableEmptySections={true}
+                                />
+                            </View>
+                        </View>
+                        ||
+
+                        (this.state.isSearch)
+                            &&
+                        <View style={{borderColor: 'lightgray', borderWidth: 1}}>
+                            <TextInput
+                                ref="2"
+                                onChangeText={(text) =>
+                                    this.setState({
+                                        newComment:text
+                                    })
+                                }
+                                style={{
+                                    borderRadius: 2, fontSize: FontSize.regFont, height: 40,
+                                    backgroundColor: 'transparent', borderColor: 'blue', borderWidth: 1, margin: 5,
+                                }}
+                                underlineColorAndroid="transparent"
+                                secureTextEntry={false}
+                                value={this.state.newComment}/>
+                            <View style={{flexDirection: 'row'}}>
+                                <View>
+                                    <TouchableHighlight onPress={() => this.setState({
+                                                                            commentData:this.state.newComment,
+                                                                            onComment:false,
+                                                                            visibleModal:0}) }
+                                                        underlayColor='transparent'>
+                                        <View style={{
+                                            backgroundColor: 'rgb(92,184,93)',
+                                            borderRadius: 2,
+                                            padding: 10,
+                                            marginLeft: 5,
+                                            marginBottom: 5,
+                                            width: 60,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Text style={{color: 'white'}}>
+                                                Add
+                                            </Text>
+                                        </View>
+                                    </TouchableHighlight>
+                                </View>
+                                <View style={{flex: 1, justifyContent: 'center', marginLeft: 2, marginBottom: 5}}>
+                                    <Text style={{flexWrap: 'wrap', color: Const.appblue}}>
+                                        No Result Found,Create new Comment with Search Term?
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+                            ||
+                            null
+
+                        ||
+                            null
+                    }
+
+
+                </View>
+                </View>
 
                     ||
 

@@ -15,7 +15,6 @@ import ColorPicker from './colorPicker';
 export default class RichTextExample extends Component {
 
     constructor(props) {
-        debugger
         super(props);
         this.getHTML = this.getHTML.bind(this);
         this.setFocusHandlers = this.setFocusHandlers.bind(this);
@@ -33,7 +32,6 @@ export default class RichTextExample extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        debugger
         this.setState({
             comment:nextProps.comment
         })
@@ -41,7 +39,6 @@ export default class RichTextExample extends Component {
     }
 
     handleChange = (message) => {
-        debugger
         this.setState({comment:message})
     };
 
@@ -74,7 +71,7 @@ export default class RichTextExample extends Component {
                     enableOnChange
                     onChange={()=>this.handleChange()}
                     hiddenTitle={true}
-                    contentPlaceholder="Enter Comments Here...."
+                    contentPlaceholder="This information will display in the problems sections of the report.User should enter issues only."
                     initialContentHTML={this.state.comment}
                     editorInitializedCallback={() => this.onEditorInitialized()}
                 />
@@ -112,8 +109,6 @@ export default class RichTextExample extends Component {
                      null
 
                 }
-
-
 
 
                 {Platform.OS === 'ios' && <KeyboardSpacer/>}
