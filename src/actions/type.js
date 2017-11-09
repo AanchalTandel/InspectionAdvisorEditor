@@ -30,3 +30,5 @@ export const  SET_AGENT = "SET_AGENT";
 //COMMENT
 export const SET_COMMENT = "COMMENT";
 
+export const GET_VIDEOS = "GET_VIDEOS";
+export const GET_IMAGES = "GET_IMAGES";
